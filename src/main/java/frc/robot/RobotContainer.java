@@ -12,11 +12,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandClimber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -40,6 +42,8 @@ public class RobotContainer {
         private final CommandXboxController joystick = new CommandXboxController(1);
 
         public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        // SubSystems
+        private final CommandClimber climberSystem = new CommandClimber();
 
         public RobotContainer() {
                 configureBindings();
@@ -85,6 +89,29 @@ public class RobotContainer {
 
                 // Reset the field-centric heading on left bumper press.
                 joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+                // Climber Buttons
+                // Go Up (Up DPAD)
+                joystick.povUp()
+                        .onTrue(new InstantCommand(() -> 
+                                climberSystem.setSpeed(Constants.Climber.MOTOR_SPEED),
+                                climberSystem
+                        ))
+                        .onFalse(new InstantCommand(() -> 
+                                climberSystem.setSpeed(0),
+                                climberSystem
+                        ));
+
+                // Go Down (Down DPAD)
+                joystick.povDown()
+                        .onTrue(new InstantCommand(() -> 
+                                climberSystem.setSpeed(-Constants.Climber.MOTOR_SPEED),
+                                climberSystem
+                        ))
+                        .onFalse(new InstantCommand(() -> 
+                                climberSystem.setSpeed(0),
+                                climberSystem
+                        ));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
