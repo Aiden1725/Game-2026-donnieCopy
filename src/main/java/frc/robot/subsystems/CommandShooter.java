@@ -6,17 +6,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class CommandShooter extends SubsystemBase {
-  TalonFX m_motor = new TalonFX(Constants.Intake.Moter_ID);
+  TalonFX x44_motor_1 = new TalonFX(Constants.Shooter.Motor_ID_1);
+  TalonFX x44_motor_2 = new TalonFX(Constants.Shooter.Motor_ID_2);
+
 
   public void setSpeed(double speed) {
-    m_motor.set(speed);
+    x44_motor_1.set(speed);
+    x44_motor_2.set(-speed);
   }
 
-  // public void runIntake() {
-  //   m_motor.set(0.8);
-  // }
 
-  // public void stopIntake() {
-  //   m_motor.set(0.0);
-  // }
 }
