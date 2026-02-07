@@ -31,7 +31,7 @@ public class RobotContainer {
                                                                                           // max angular velocity
 
         /* Setting up bindings for necessary control of the swerve drive platform */
-        private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+        private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
                                                                                  // motors
@@ -43,7 +43,7 @@ public class RobotContainer {
         private final CommandXboxController joystick = new CommandXboxController(1);
 
         public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-        
+
         // SubSystems
         private final CommandClimber climberSystem = new CommandClimber();
         private final CommandIntake intakeSystem = new CommandIntake();
@@ -96,39 +96,31 @@ public class RobotContainer {
                 // Climber Buttons
                 // Go Up (X BTN)
                 joystick.x()
-                        .onTrue(new InstantCommand(() -> 
-                                climberSystem.setSpeed(Constants.Climber.MOTOR_SPEED),
-                                climberSystem
-                        ))
-                        .onFalse(new InstantCommand(() -> 
-                                climberSystem.setSpeed(0),
-                                climberSystem
-                        ));
+                                .onTrue(new InstantCommand(() -> climberSystem.setSpeed(Constants.Climber.MOTOR_SPEED),
+                                                climberSystem))
+                                .onFalse(new InstantCommand(() -> climberSystem.setSpeed(0),
+                                                climberSystem));
 
                 // Go Down (Y BTN)
                 joystick.y()
-                        .onTrue(new InstantCommand(() -> 
-                                climberSystem.setSpeed(-Constants.Climber.MOTOR_SPEED),
-                                climberSystem
-                        ))
-                        .onFalse(new InstantCommand(() -> 
-                                climberSystem.setSpeed(0),
-                                climberSystem
-                        ));
+                                .onTrue(new InstantCommand(() -> climberSystem.setSpeed(-Constants.Climber.MOTOR_SPEED),
+                                                climberSystem))
+                                .onFalse(new InstantCommand(() -> climberSystem.setSpeed(0),
+                                                climberSystem));
 
                 // Shooter Buttons
                 // Forward (Right Trigger)
                 joystick.rightTrigger()
-                        .onTrue(new InstantCommand(() -> intakeSystem.setSpeed(Constants.Intake.MOTOR_SPEED),
+                                .onTrue(new InstantCommand(() -> intakeSystem.setSpeed(Constants.Intake.MOTOR_SPEED),
                                                 intakeSystem))
-                        .onFalse(new InstantCommand(() -> intakeSystem.setSpeed(0),
+                                .onFalse(new InstantCommand(() -> intakeSystem.setSpeed(0),
                                                 intakeSystem));
 
                 // Backward (Left Trigger)
                 joystick.leftTrigger()
-                        .onTrue(new InstantCommand(() -> intakeSystem.setSpeed(-Constants.Intake.MOTOR_SPEED),
+                                .onTrue(new InstantCommand(() -> intakeSystem.setSpeed(-Constants.Intake.MOTOR_SPEED),
                                                 intakeSystem))
-                        .onFalse(new InstantCommand(() -> intakeSystem.setSpeed(0),
+                                .onFalse(new InstantCommand(() -> intakeSystem.setSpeed(0),
                                                 intakeSystem));
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
